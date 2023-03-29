@@ -5,11 +5,12 @@ haar_file = 'haarcascade_frontalface_default.xml'
 datasets = 'datasets'
 
 # Part 1: Create fisherRecognizer
-print('Recognizing Face Please Be in sufficient Lights...2')
+print('Recognizing Face Please Be in sufficient light')
 
 # Create a list of images and a list of corresponding names
 (images, labels, names, id) = ([], [], {}, 0)
 for (subdirs, dirs, files) in os.walk(datasets):
+	#print("line 13")
 	for subdir in dirs:
 		names[id] = subdir
 		subjectpath = os.path.join(datasets, subdir)
@@ -20,7 +21,7 @@ for (subdirs, dirs, files) in os.walk(datasets):
 			labels.append(int(label))
 		id += 1
 (width, height) = (130, 100)
-
+#print("line 24")
 # Create a Numpy array from the two lists above
 (images, labels) = [numpy.array(lis) for lis in [images, labels]]
 
@@ -29,6 +30,7 @@ for (subdirs, dirs, files) in os.walk(datasets):
 model = cv2.face.LBPHFaceRecognizer_create()
 model.train(images, labels)
 
+print("line end face_config")
 def face_recog():
 	face_cascade = cv2.CascadeClassifier(haar_file)
 	webcam = cv2.VideoCapture(0)
