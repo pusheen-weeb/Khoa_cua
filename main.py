@@ -13,27 +13,31 @@ temp_face_active_time = face_active_time
 mo_cua_cam = False
 mo_cua_rfid = False
 
+#gioi han hoat dong cua cac thanh phan
+count_rfid = 0
+
 print("Moi thu deu on bat dau chay")
-print("Thu face recog",face_recognize.face_recog())
+#print("Thu face recog",face_recognize.face_recog())
 
 while True: # Run forever
     
     #face recognize
+    #measure elapse time to make wait time
     temp_face_active_time = time.time()
-    time_diff = temp_face_active_time - face_active_time  
-    
+    time_diff = temp_face_active_time - face_active_time     
     #detect press and waited 5s
-    if (GPIO.input(10) == GPIO.LOW) and time_diff > 5.0:
+    if (GPIO.input(10) == GPIO.LOW) and time_diff > 7.0:
         print("Nhan nut camera")
         mo_cua_cam = face_recognize.face_recog()
         face_active_time = temp_face_active_time
     
     if time_diff > 2000:#avoid overflow
         face_active_time = temp_face_active_time
-    #print(time_diff)
     
     #RFID Rc522
-    id,text,mo_cua_rfid = the_tu.RFID_read()
+    if count_rfid == 50 #chay rfid sau 50 iteration
+        id,text,mo_cua_rfid = the_tu.RFID_read()
+        count_rfid = 0 
     
     
     #mo cua
