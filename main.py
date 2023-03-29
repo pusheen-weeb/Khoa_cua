@@ -34,7 +34,8 @@ while True: # Run forever
         face_active_time = temp_face_active_time
     
     #RFID Rc522
-    if count_rfid == 50 #chay rfid sau 50 iteration
+    count_rfid = count_rfid + 1 
+    if count_rfid == 50: #chay rfid sau 50 iteration
         id,text,mo_cua_rfid = the_tu.RFID_read()
         count_rfid = 0 
     
