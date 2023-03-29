@@ -17,7 +17,6 @@ mo_cua_rfid = False
 count_rfid = 0
 
 print("Moi thu deu on bat dau chay")
-#print("Thu face recog",face_recognize.face_recog())
 
 while True: # Run forever
     
