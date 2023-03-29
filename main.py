@@ -13,6 +13,10 @@ temp_face_active_time = face_active_time
 mo_cua_cam = False
 mo_cua_rfid = False
 
+
+print("San sang chay chuong trinh")
+print("test camera:",face_recognize.face_recog())
+
 while True: # Run forever
     
     #face recognize
