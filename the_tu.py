@@ -17,6 +17,7 @@ def RFID_read():
         
     except:
         print("Loi the tu")
+        return [0,"",False]
         
         
 def RFID_write():
@@ -29,4 +30,4 @@ def RFID_write():
         print("Written")
     
     except:
-        print("Loi the tu")
+        print("Loi the tu")    
