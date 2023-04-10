@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
 import RPi.GPIO as GPIO
-from mfrc522 import SimpleMFRC522
-GPIO.cleanup()
+import custom_mfrc522
 
 reader = SimpleMFRC522()
 

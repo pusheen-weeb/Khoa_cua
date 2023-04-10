@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
 import RPi.GPIO as GPIO
-from mfrc522 import SimpleMFRC522
+import SimpleMFRC522
+reader = SimpleMFRC522.SimpleMFRC522()
 
 def RFID_read():
-    reader = SimpleMFRC522()
 
     try:
         id, text = reader.read()
@@ -16,7 +16,7 @@ def RFID_read():
             return [0,"",False]
         
     except:
-        print("Loi the tu")
+        #print("Loi the tu")
         return [0,"",False]
         
         
