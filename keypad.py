@@ -6,24 +6,24 @@ GPIO.setmode(GPIO.BOARD )
 GPIO.setwarnings(False)
 
 # các chân GPIO của rasp với LCD
-LCD_RS = 29
-LCD_E  = 13
-LCD_D4 = 23
-LCD_D5 = 21
-LCD_D6 = 19
+LCD_RS = 3
+LCD_E  = 5
+LCD_D4 = 7
+LCD_D5 = 11
+LCD_D6 = 13
 LCD_D7 = 15
 
 # các chân GPIO của rasp với keypad
 
-R1 = 31
-R2 = 33
-R3 = 35
-R4 = 37
+R1 = 37
+R2 = 36
+R3 = 38
+R4 = 40
 
-C1 = 40
-C2 = 38
-C3 = 36
-C4 = 32
+C1 = 35
+C2 = 33
+C3 = 31
+C4 = 29
 
 
 

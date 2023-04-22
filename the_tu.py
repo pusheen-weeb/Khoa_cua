@@ -2,6 +2,7 @@
 
 import RPi.GPIO as GPIO
 import SimpleMFRC522
+GPIO.setwarnings(False)
 reader = SimpleMFRC522.SimpleMFRC522()
 
 def RFID_read():
@@ -20,14 +21,13 @@ def RFID_read():
         return [0,"",False]
         
         
-def RFID_write():
-    reader = SimpleMFRC522()
-
-    try:
-        text = input('New data:')
-        print("Now place your tag to write")
+def RFID_write(text="default"):
+    try: 
+        #print("Now place your tag to write")
         reader.write(text)
-        print("Written")
+        #print("Written")
     
     except:
         print("Loi the tu")    
+def RFID_wipe():
+    reader.wipe()
