@@ -20,7 +20,7 @@ lcd = lcd.LCD() # khoi tao LCD
 #gioi han hoat dong cua cac thanh phan
 count_cam  = 0
 count_rfid = 0
-
+tem_client_access = False
 #id
 id_number = ""
 #pass
@@ -96,7 +96,11 @@ while True: # Run forever
                 time.sleep(1)
                 print("Chay camera")
                 lcd.text ("Chay camera",1)
-                tem_client_access = face_recognize.face_recog()
+                try:
+                    tem_client_access = face_recognize.face_recog()
+                except:
+                    pass
+                
                 if tem_client_access == True:
                     client_access = True
                 
@@ -106,7 +110,9 @@ while True: # Run forever
             #the tu
             if char == "3":
                 time.sleep(1)
+                
                 while True:
+                    
                     print("Doc the tu")
                     lcd.text("Doc the tu",1)
                     time.sleep(0.3)
@@ -369,12 +375,12 @@ while True: # Run forever
                                     break
                                 ##time.sleep(0.1)
                                 if char == "1":
+                                    id_number = ""
                                     print("Add card")
                                     lcd.text ("Add card",1)
-                                    the_tu.RFID_write(str(new_id))
+                                    the_tu.RFID_write(id_number)
                                     print("Write success")
                                     lcd.text ("Write success",2)
-                                    new_id = new_id + 1
                                 
                                 if char == "2":
                                     lcd.text ("Comming soon",1)
