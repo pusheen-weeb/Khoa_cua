@@ -5,6 +5,8 @@ import the_tu
 import key
 import relay_4
 import rpi_lcd as lcd # thu vien hien thi len lcd
+import adafruit_fingerprint
+import fingerprint_simpletest_rpi as finger_code
 
 GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setmode(GPIO.BOARD) # Use physical pin numbering
@@ -13,16 +15,14 @@ GPIO.setup(pwmpin, GPIO.OUT) # set pin 32 as pwm
 f = GPIO.PWM(pwmpin, 100)
 f.start(0)
 
-#cam button pressed
-#cam_butt_pressed = False
-#dieu khien cua
+lcd = lcd.LCD() # khoi tao LCD
 
 #gioi han hoat dong cua cac thanh phan
 count_cam  = 0
 count_rfid = 0
 
 #id
-new_id = 0
+id_number = ""
 #pass
 pass_word = "1"
 
@@ -33,9 +33,9 @@ relay = [False,False,False,False]
 relay_4.control_relay(relay[0],relay[1],relay[2],relay[3])
 
 fan = 0
-lcd = lcd.LCD() # khoi tao LCD
 print("Moi thu deu on bat dau chay") # thay bang "HELLO"
 lcd.text("HELLO",1)
+time.sleep(2)
 #hien manin menu
 print("1.Client menu","2.Admin menu",sep = '\n')
 
@@ -89,11 +89,7 @@ while True: # Run forever
                     #time.sleep(0.1) 
                     lcd.clear()
                 time.sleep(1) 
-                lcd.clear()
-
-                
-                            
-                
+                lcd.clear() 
             #face recognize
             #detect press
             if char == "2":
@@ -105,9 +101,9 @@ while True: # Run forever
                     client_access = True
                 
                 time.sleep(1) 
-                lcd.clear()
-
+                lcd.clear() 
             
+            #the tu
             if char == "3":
                 time.sleep(1)
                 while True:
@@ -130,12 +126,19 @@ while True: # Run forever
                         break 
                     lcd.clear()
                 time.sleep(1) 
-                lcd.clear()
+                lcd.clear()  
 
-
+            #van tay
+            if char == "4":
+                lcd.text("Van tay",1)
+                time.sleep(1)
+                lcd.text("Dat tay vao",1)
+                finger_OK = finger_code.finger_command("2",0)
+                if finger_OK == "match":
+                    client_access = True
                 
-            char = None
-            #mo cua
+            char = None    
+            #access granted
             if client_access:#client access = True
                 print("Client granted")
                 lcd.text("Client granted",1)
@@ -176,9 +179,11 @@ while True: # Run forever
                         relay[3] = True
                         relay_4.control_relay(relay[0],relay[1],relay[2],relay[3])
                         lcd.text("Opened",1)
-                        time.sleep(6)
+                        lcd.text("Close after 10s",2)
+                        time.sleep(10)
                         relay[3] = False
                         relay_4.control_relay(relay[0],relay[1],relay[2],relay[3])
+                        lcd.clear()
                         lcd.text("Closed",1)
                     
                     if char == "2":#Led
@@ -204,11 +209,8 @@ while True: # Run forever
                             mess = ""
                             mess = mess + "".join([str(int(x)) for x in relay[0:3]])
                             lcd.text(mess,2)
-                            
                             relay_4.control_relay(relay[0],relay[1],relay[2],relay[3])
-                            
                             char = None
-                    
                     if char == "3":#fan
                         while True:
                             print("Fan","+ -")
@@ -258,7 +260,7 @@ while True: # Run forever
                 break
             #time.sleep(0.1)
             if char != None:
-                admin_access = key.pass_check(char,"1111")
+                admin_access = key.pass_check(char,"11")
                 if admin_access == True:
                     print("log in")
                     lcd.text("Log in",1)
@@ -267,8 +269,6 @@ while True: # Run forever
                     lcd.text("Ad granted",2)
                     time.sleep (1)
                     lcd.clear()
-                    
-                    
                     while admin_access:
                         #menu admin
                         print("1Pass 2Cam 3The 4VanT")
@@ -317,7 +317,45 @@ while True: # Run forever
                             time.sleep(1)
                             lcd.clear()  
                         if char == "2":
+                            lcd.text("Face register",1)
+                            time.sleep(2)
+                            id_number = "Id"
+                            #char allowed to be in in id
+                            allowed_id = ['1','2','3','4','5','6','7','8','9','0']
                             char = None
+                            while True:
+                                lcd.text("Id register",1)
+                                char = None
+                                char = key.read_key()
+                                if char == "c":
+                                    lcd.text("back",1)
+                                    time.sleep(0.2)
+                                    break
+                                
+                                if char not in allowed_id and char != None and char not in ['c','#']:
+                                    char = None
+                                    
+                                if char !=None and char != '#':
+                                    id_number = id_number + char
+                                lcd.text(id_number,2)
+                                if char == "#":
+                                    lcd.text("Id confirm:",1)
+                                    lcd.text(id_number,2)
+                                    time.sleep(2)
+                                    lcd.clear()
+                                    lcd.text("Cam start in 5s",1)
+                                    time.sleep(5)
+                                    lcd.text("Start camera:",1)
+                                    try:
+                                        cam_status = face_recognize.face_register(id_number)
+                                        if cam_status == "success":
+                                            lcd.text("success",1)
+                                        else:
+                                            lcd.text("Failed",1)
+                                    except:
+                                        lcd.text("Failed camera:",1)
+                                    break
+                                
 
                         if char == "3":
                             while True:
@@ -339,14 +377,48 @@ while True: # Run forever
                                     new_id = new_id + 1
                                 
                                 if char == "2":
-                                    the_tu.RFID_wipe()
-                                    print("cleared")
-                                    lcd.text ("cleared",1)
+                                    lcd.text ("Comming soon",1)
                             
                             char = None
                             #time.sleep(0.1)
                             lcd.clear()
                         if char == "4":
+                            id_number = ""
+                            #char allowed to be in in id
+                            allowed_id = ['1','2','3','4','5','6','7','8','9','0']
+                            lcd.text("config fingerprint",1)
+                            time.sleep(1)
+                            while True:
+                                #lcd.text(,1)
+                                lcd.text("1.Add finger ",1)
+                                lcd.text("2.Clear",2)
+                                char = key.read_key()
+                                lcd.clear()
+                                if char == "c":
+                                    lcd.text("Back", 1)
+                                    break
+                                if char == "1":
+                                    lcd.text("Add finger",1)
+                                    time.sleep(1)
+                                    while True:
+                                        lcd.text("Enter ID 0-300",1)
+                                        lcd.text(id_number,2)
+                                        char = key.read_key()
+                                        if char == "c":
+                                            lcd.text("Back", 1)
+                                            break
+                                        if char not in allowed_id and char != None and char not in ['c','#']:
+                                            char = None
+                                        if char !=None and char != '#':
+                                            id_number = id_number + char
+                                        if char == "#" and len(id_number) >0:
+                                            finger_code.finger_command("1",int(id_number))
+                                            break
+                                if char == "2":
+                                    finger_code.finger_command("3",0)
+                                    lcd.text("Cleared finger memory",1)
+                                    time.sleep(2)
+                                    
                             char = None
                         char = None
                     

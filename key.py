@@ -32,7 +32,7 @@ input= ""
 def readline(line, characters):
     char = None
     GPIO.output(line, GPIO.HIGH)
-    time.sleep(0.02)
+    time.sleep(0.01)
     if(GPIO.input(C1) == 1):
         #inputstring = inputstring +characters[0]
         #hidekey = hidekey +characters[0]
@@ -57,7 +57,7 @@ def readline(line, characters):
         
            
     GPIO.output(line, GPIO.LOW)
-    time.sleep(0.02)
+    time.sleep(0.01)
     return char
 
 def read_key():
